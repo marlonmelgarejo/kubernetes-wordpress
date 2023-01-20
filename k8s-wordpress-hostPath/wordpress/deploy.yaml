@@ -5,6 +5,7 @@ metadata:
   labels:
     app: wordpress
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: wordpress
@@ -20,6 +21,13 @@ spec:
       containers:
       - image: wordpress:4.8-apache
         name: wordpress
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "100m"
+          limits:
+            memory: "250Mi"
+            cpu: "100m"
         env:
         - name: WORDPRESS_DB_HOST
           value: wordpress-mysql
@@ -31,6 +39,18 @@ spec:
         ports:
         - containerPort: 80
           name: wordpress
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+        livenessProbe:
+          httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+          initialDelaySeconds: 15
         volumeMounts:
         - name: wordpress-persistent-storage
           mountPath: /var/www/html
