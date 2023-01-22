@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: frontend
+    spec:
+      containers:
+      - image: wordpress:4.8-apache
+        name: wordpress
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "25m"
+          limits:
+            memory: "200Mi"
+            cpu: "40m"
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: wordpress-mysql
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 80
+          name: wordpress
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: wordpress-persistent-nfs
+          mountPath: /var/www/html
+      volumes:
+      - name: wordpress-persistent-nfs
+        persistentVolumeClaim:
+          claimName: nfs-pvc-wp

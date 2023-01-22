@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc-wp
+spec:
+  storageClassName: manual
+  resources:
+    requests:
+      storage: 7Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
