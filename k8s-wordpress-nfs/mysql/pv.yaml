@@ -14,5 +14,5 @@ spec:
     - hard
     - nfsvers=4.1
   nfs:
-    path: /tmp/data/mysql
+    path: /srv/data/mysql
     server: 10.1.0.7
