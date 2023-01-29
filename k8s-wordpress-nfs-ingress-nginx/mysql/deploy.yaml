@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-mysql
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "25m"
+          limits:
+            memory: "900Mi"
+            cpu: "40m"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: mysql-persistent-nfs
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-nfs
+        persistentVolumeClaim:
+          claimName: nfs-pvc-mysql
