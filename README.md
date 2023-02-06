@@ -14,4 +14,9 @@
 - Configurado HorizontalPodAutoscaler (HPA) para escalar automaticamente os pods do wordpress de acordo com as métricas de cpu aplicadas
 - Configurado Ingress Controller com Nginx como proxy reverso
 
+# Deploy Wordpress no Kubernetes utilizando NFS, HPA e INGRESS CONTROLLER com Certificado Let's Encrypt
 
+- Deploy do Wordpress e Mysql persistindo dados em um servidor remoto NFS
+- Configurado HorizontalPodAutoscaler (HPA) para escalar automaticamente os pods do wordpress de acordo com as métricas de cpu aplicadas
+- Configurado Ingress Controller com Nginx como proxy reverso
+- Adicionado certificado com Certmanager e Let's Encrypt utilizando a opção de staging para testes.
