@@ -1,0 +1,50 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wordpress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /      
+    cert-manager.io/cluster-issuer: "certmanager-staging"
+spec:
+  tls:
+  - hosts:
+    - "marlonmelgarejo.com.br"
+    secretName: "marlonmelgarejo.com.br-secret"
+  - hosts:
+    - "admin.marlonmelgarejo.com.br"
+    secretName: "admin.marlonmelgarejo.com.br-secret"
+  - hosts:
+    - "nginx.marlonmelgarejo.com.br"
+    secretName: "nginx.marlonmelgarejo.com.br-secret"
+  ingressClassName: nginx        
+  rules:
+  - host: marlonmelgarejo.com.br
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: wordpress
+              port: 
+                number: 80
+  - host: admin.marlonmelgarejo.com.br
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: wordpress
+              port:
+                number: 80
+  - host: nginx.marlonmelgarejo.com.br
+    http:
+      paths:
+        - path: /        
+          pathType: Prefix
+          backend:
+            service:
+              name: nginx
+              port:
+                number: 80
